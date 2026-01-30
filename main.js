@@ -38,7 +38,7 @@ SCENE.add(MOON);
 
 // Light from Sun
 const SUNLIGHT = new THREE.DirectionalLight(0xffffff, 1);
-SUNLIGHT.position.set(5, 3, 5);
+SUNLIGHT.position.set(5, 0, 5);
 SCENE.add(SUNLIGHT);
 
 // Ambient light
