@@ -34,6 +34,10 @@ const SUNLIGHT = new THREE.DirectionalLight(0xffffff, 1);
 SUNLIGHT.position.set(5, 3, 5);
 SCENE.add(SUNLIGHT);
 
+// Ambient light
+const AMBIENTLIGHT = new THREE.AmbientLight(0xffffff, 0.2);
+SCENE.add(AMBIENTLIGHT);
+
 // Animation loop
 function animate() {
     requestAnimationFrame(animate); 
