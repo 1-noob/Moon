@@ -20,7 +20,11 @@ document.body.appendChild(RENDERER.domElement);
 
 // Geometry : temporary cube
 const GEOMETRY = new THREE.SphereGeometry(1, 64, 64);
-const MATERIAL = new THREE.MeshBasicMaterial({ color: 0x888888});
+const MATERIAL = new THREE.MeshStandardMaterial({
+     color: 0x888888,
+     roughness: 1.0,
+     metalness: 0.0
+});
 
 const MOON = new THREE.Mesh(GEOMETRY, MATERIAL);
 SCENE.add(MOON);
