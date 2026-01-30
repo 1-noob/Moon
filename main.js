@@ -1,5 +1,7 @@
 import * as  THREE from 'https://unpkg.com/three@0.160.1/build/three.module.js';
 
+const TEXTURE_LOADER = new THREE.TextureLoader();
+
 // Scene
 const SCENE = new THREE.Scene();
 
@@ -21,8 +23,12 @@ document.body.appendChild(RENDERER.domElement);
 
 // Geometry : temporary cube
 const GEOMETRY = new THREE.SphereGeometry(1, 64, 64);
+
+// Moon Texture
+const MOON_TEXTURE = TEXTURE_LOADER.load('./texture/moon_colour.jpg');
+
 const MATERIAL = new THREE.MeshStandardMaterial({
-     color: 0x888888,
+     map: MOON_TEXTURE,
      roughness: 1.0,
      metalness: 0.0
 });
