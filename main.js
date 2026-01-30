@@ -19,17 +19,29 @@ RENDERER.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(RENDERER.domElement);
 
 // Geometry : temporary cube
-const GEOMETRY = new THREE.BoxGeometry();
-const MATERIAL = new THREE.MeshBasicMaterial({ color: 0xaaaaaa});
+const GEOMETRY = new THREE.SphereGeometry(1, 64, 64);
+const MATERIAL = new THREE.MeshBasicMaterial({ color: 0x888888});
 
-const CUBE = new THREE.Mesh(GEOMETRY, MATERIAL);
-SCENE.add(CUBE);
+const MOON = new THREE.Mesh(GEOMETRY, MATERIAL);
+SCENE.add(MOON);
+
+// Light from Sun
+const SUNLIGHT = new THREE.DirectionalLight(0xffffff, 1);
+SUNLIGHT.position.set(5, 3, 5);
+SCENE.add(SUNLIGHT);
 
 // Animation loop
 function animate() {
     requestAnimationFrame(animate); 
-    CUBE.rotation.x += 0.01;
+    MOON.rotation.y += 0.002; // Rotate the moon slowly
     RENDERER.render(SCENE, CAMERA);
 }
 
 animate();
+
+// Handle window resize
+window.addEventListener('resize', () => {
+    CAMERA.aspect = window.innerWidth / window.innerHeight;
+    CAMERA.updateProjectionMatrix();
+    RENDERER.setSize(window.innerWidth, window.innerHeight);
+});
