@@ -16,6 +16,7 @@ CAMERA.position.z = 3;
 // Renderer
 const RENDERER = new THREE.WebGLRenderer({ antialias: true });
 RENDERER.setSize(window.innerWidth, window.innerHeight);
+RENDERER.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 document.body.appendChild(RENDERER.domElement);
 
 // Geometry : temporary cube
