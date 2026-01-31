@@ -4,16 +4,24 @@ const TEXTURE_LOADER = new THREE.TextureLoader();
 
 // Scene
 const SCENE = new THREE.Scene();
+const SKY_TEXTURE = TEXTURE_LOADER.load('./texture/nightsky.jpg');
+SKY_TEXTURE.colorSpace = THREE.SRGBColorSpace;
+SKY_TEXTURE.flipY = false;
+SKY_TEXTURE.wrapS = THREE.ClampToEdgeWrapping;
+SKY_TEXTURE.wrapT = THREE.ClampToEdgeWrapping;  
+SKY_TEXTURE.needsUpdate = true;
+SCENE.background = SKY_TEXTURE;
+SCENE.backgroundIntensity = 1.6;
 
 // Camera
 const CAMERA = new THREE.PerspectiveCamera(
-    75, // field of view 75 degrees
+    45, // field of view 75 degrees
     window.innerWidth / window.innerHeight, // aspect ratio
     0.1, // near clipping plane
     1000 // far clipping plane
 );
 
-CAMERA.position.z = 3;
+CAMERA.position.z = 3.0;
 
 // Renderer
 const RENDERER = new THREE.WebGLRenderer({ antialias: true });
@@ -22,11 +30,12 @@ RENDERER.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 RENDERER.physicallyCorrectLights = true;
 RENDERER.outputColorSpace = THREE.SRGBColorSpace;
 RENDERER.toneMapping = THREE.ACESFilmicToneMapping;
-RENDERER.toneMappingExposure = 1.8;
+RENDERER.toneMappingExposure = 3.2;
 document.body.appendChild(RENDERER.domElement);
 
-// Geometry : temporary cube
+// Geometry 
 const GEOMETRY = new THREE.SphereGeometry(1, 256, 256);
+GEOMETRY.computeVertexNormals();
 
 // Moon Texture
 const MOON_TEXTURE = TEXTURE_LOADER.load('./texture/moon_colour.jpg');
@@ -34,6 +43,7 @@ MOON_TEXTURE.colorSpace = THREE.SRGBColorSpace;
 
 // Normal map
 const NORMAL_MAP = TEXTURE_LOADER.load('./texture/moon_normal.jpg');
+NORMAL_MAP.flipY = false;
 NORMAL_MAP.colorSpace = THREE.NoColorSpace;
 
 // Displacement map
@@ -43,38 +53,39 @@ DISPLACEMENT_MAP.colorSpace = THREE.NoColorSpace;
 
 const MATERIAL = new THREE.MeshStandardMaterial({
      map: MOON_TEXTURE,
-     color: new THREE.Color(1.05, 1.02, 0.98),
-     normalMap: NORMAL_MAP,
-     normalScale: new THREE.Vector2(2.0, 2.0),
-     
+     color: new THREE.Color(1.35, 1.30, 1.25),
 
-     roughness: 0.88,
-     metalness: 0.0
+     normalMap: NORMAL_MAP,
+     normalScale: new THREE.Vector2(3.2, 2.6),
+
+     displacementMap: DISPLACEMENT_MAP,
+     displacementScale: 0.007,
+
+     roughness: 0.6,
+     metalness: 0.0,
+
+     emissive: new THREE.Color(0x222222),
+     emissiveIntensity: 0.35
 });
 
 const MOON = new THREE.Mesh(GEOMETRY, MATERIAL);
 SCENE.add(MOON);
 
 // Light from Sun
-const SUNLIGHT = new THREE.DirectionalLight(0xffffff, 6.0);
-SUNLIGHT.position.set(10, 4, 6);
-
-SUNLIGHT.target.position.set(0, 0, 0);
-SCENE.add(SUNLIGHT.target);
-
+const SUNLIGHT = new THREE.DirectionalLight(0xffffff, 12.0);
 SCENE.add(SUNLIGHT);
+SCENE.add(SUNLIGHT.target);
+SUNLIGHT.position.set(12, 2.5, 2);
+SUNLIGHT.intensity = 1.0;
+SUNLIGHT.target.position.set(0, 0, 0);
 
 // Earthshine ambient light
-const EARTHSHINE = new THREE.DirectionalLight(0xb0b6c0, 0.18);
-EARTHSHINE.position.set(-6, -3, -6);
+const EARTHSHINE = new THREE.AmbientLight(0x8899aa, 0.6);
+EARTHSHINE.position.set(-6, -2, -4);
 SCENE.add(EARTHSHINE);
 
-// Hemisphere light
-const HEMISPHERELIGHT = new THREE.HemisphereLight(0xf0f0f0, 0x000000, 0.015);
-SCENE.add(HEMISPHERELIGHT);
-
 // Ambient light
-const AMBIENT = new THREE.AmbientLight(0xffffff, 0.06);
+const AMBIENT = new THREE.AmbientLight(0xffffff, 0.12);
 SCENE.add(AMBIENT);
 
 
@@ -92,4 +103,4 @@ window.addEventListener('resize', () => {
     CAMERA.aspect = window.innerWidth / window.innerHeight;
     CAMERA.updateProjectionMatrix();
     RENDERER.setSize(window.innerWidth, window.innerHeight);
-});
+})
