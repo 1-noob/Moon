@@ -90,12 +90,12 @@ const SUNLIGHT = new THREE.DirectionalLight(0xffffff, 12.0);
 SCENE.add(SUNLIGHT);
 SCENE.add(SUNLIGHT.target);
 SUNLIGHT.position.set(20, 6, 15);
-SUNLIGHT.intensity = 1.8;
+SUNLIGHT.intensity = 1.25;
 SUNLIGHT.target.position.set(0, 0, 0);
 SUNLIGHT.target.updateMatrixWorld();
 
 // Earthshine ambient light
-const EARTHSHINE = new THREE.AmbientLight(0x8899aa, 0.6);
+const EARTHSHINE = new THREE.AmbientLight(0x8899aa, 1);
 EARTHSHINE.position.set(-6, -2, -4);
 SCENE.add(EARTHSHINE);
 
@@ -105,9 +105,22 @@ SCENE.add(AMBIENT);
 
 
 // Animation loop
+let clock = new THREE.Clock();
+
 function animate() {
-    requestAnimationFrame(animate); 
-    MOON.rotation.y += 0.002; // Rotate the moon slowly
+    requestAnimationFrame(animate);
+
+    const t = clock.getElapsedTime();
+
+    // Yaw (main rotation)
+    MOON.rotation.y = t * 0.2; // rotates around Y
+
+    // Subtle pitch oscillation (tilt back & forth)
+    MOON.rotation.x = Math.sin(t * 0.3) * 0.02;
+
+    // Very subtle roll (like spinning in space)
+    MOON.rotation.z = Math.sin(t * 0.15) * 0.01;
+
     RENDERER.render(SCENE, CAMERA);
 }
 
