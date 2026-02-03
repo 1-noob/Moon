@@ -21,7 +21,20 @@ const CAMERA = new THREE.PerspectiveCamera(
     1000 // far clipping plane
 );
 
-CAMERA.position.z = 3.0;
+const BASE_ASPECT = 16/9;
+const BASE_CAMERA_Z = 3.0;
+
+const SCALE_FACTOR = 0.8;
+
+function updateCamera() {
+    const aspect = window.innerWidth / window.innerHeight;
+    CAMERA.aspect = aspect;
+
+    // Zoom out for Tall Screens
+    CAMERA.position.z = BASE_CAMERA_Z * (BASE_ASPECT/aspect) * SCALE_FACTOR;
+
+    CAMERA.updateProjectionMatrix();
+}
 
 // Renderer
 const RENDERER = new THREE.WebGLRenderer({ antialias: true });
@@ -32,6 +45,7 @@ RENDERER.outputColorSpace = THREE.SRGBColorSpace;
 RENDERER.toneMapping = THREE.ACESFilmicToneMapping;
 RENDERER.toneMappingExposure = 3.2;
 document.body.appendChild(RENDERER.domElement);
+updateCamera();
 
 // Geometry 
 const GEOMETRY = new THREE.SphereGeometry(1, 256, 256);
@@ -56,16 +70,16 @@ const MATERIAL = new THREE.MeshStandardMaterial({
      color: new THREE.Color(1.35, 1.30, 1.25),
 
      normalMap: NORMAL_MAP,
-     normalScale: new THREE.Vector2(3.2, 2.6),
+     normalScale: new THREE.Vector2(1.2, 1.2),
 
      displacementMap: DISPLACEMENT_MAP,
-     displacementScale: 0.007,
+     displacementScale: 0.05,
 
      roughness: 0.6,
      metalness: 0.0,
 
      emissive: new THREE.Color(0x222222),
-     emissiveIntensity: 0.35
+     emissiveIntensity: 0.0
 });
 
 const MOON = new THREE.Mesh(GEOMETRY, MATERIAL);
@@ -75,9 +89,10 @@ SCENE.add(MOON);
 const SUNLIGHT = new THREE.DirectionalLight(0xffffff, 12.0);
 SCENE.add(SUNLIGHT);
 SCENE.add(SUNLIGHT.target);
-SUNLIGHT.position.set(12, 2.5, 2);
-SUNLIGHT.intensity = 1.0;
+SUNLIGHT.position.set(20, 6, 15);
+SUNLIGHT.intensity = 1.8;
 SUNLIGHT.target.position.set(0, 0, 0);
+SUNLIGHT.target.updateMatrixWorld();
 
 // Earthshine ambient light
 const EARTHSHINE = new THREE.AmbientLight(0x8899aa, 0.6);
@@ -85,7 +100,7 @@ EARTHSHINE.position.set(-6, -2, -4);
 SCENE.add(EARTHSHINE);
 
 // Ambient light
-const AMBIENT = new THREE.AmbientLight(0xffffff, 0.12);
+const AMBIENT = new THREE.AmbientLight(0xffffff, 0.02);
 SCENE.add(AMBIENT);
 
 
@@ -100,7 +115,6 @@ animate();
 
 // Handle window resize
 window.addEventListener('resize', () => {
-    CAMERA.aspect = window.innerWidth / window.innerHeight;
-    CAMERA.updateProjectionMatrix();
+    updateCamera();
     RENDERER.setSize(window.innerWidth, window.innerHeight);
 })
