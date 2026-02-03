@@ -17,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/1-noob/Moon/issues"
   },
-  "homepage": "https://github.com/1-noob/Moon#readme"
+  "homepage": "https://github.com/1-noob/Moon#readme",
+  "devDependencies": {
+    "@capacitor/cli": "^8.0.2",
+    "@capacitor/core": "^8.0.2"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.0.2"
+  }
 }
